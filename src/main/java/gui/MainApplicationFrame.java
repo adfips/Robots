@@ -40,6 +40,7 @@ public class MainApplicationFrame extends JFrame
         addWindow(gameWindow);
 
         setJMenuBar(generateMenuBar());
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         exit();
     }
 
@@ -139,9 +140,10 @@ public class MainApplicationFrame extends JFrame
         exitMenu.setMnemonic(KeyEvent.VK_T);
         exitMenu.getAccessibleContext().setAccessibleDescription(
                 "Выход из программы");
-        JMenuItem exitMenuItem = new JMenuItem("Закрыть программу", KeyEvent.VK_C);
+        JMenuItem exitMenuItem = new JMenuItem("Выход", KeyEvent.VK_X | KeyEvent.VK_ALT);
         exitMenuItem.addActionListener((event) -> {
-            exit();
+            Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
+                    new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         });
 
         exitMenu.add(exitMenuItem);
@@ -149,7 +151,6 @@ public class MainApplicationFrame extends JFrame
     }
 
     private void exit(){
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         MainApplicationFrame frame = this;
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e){
