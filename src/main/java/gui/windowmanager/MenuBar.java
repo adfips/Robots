@@ -1,4 +1,4 @@
-package gui;
+package gui.windowmanager;
 
 import log.Logger;
 
@@ -8,11 +8,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 
 
+/**
+ * Системное меню
+ */
 public class MenuBar extends JMenuBar {
-    MainApplicationFrame frame;
+    private final MainApplicationFrame frame;
 
     /**
-     * Заполняет строку меню полями
+     * Заполняет меню полями
      */
     public MenuBar(MainApplicationFrame frame) {
         this.frame = frame;
