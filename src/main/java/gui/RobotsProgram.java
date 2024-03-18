@@ -1,7 +1,5 @@
 package gui;
 
-import gui.windowmanager.MainApplicationFrame;
-
 import java.awt.Frame;
 
 import javax.swing.SwingUtilities;

@@ -1,4 +1,4 @@
-package gui.windowmanager;
+package gui;
 
 import log.Logger;
 
@@ -73,7 +73,7 @@ public class MenuBar extends JMenuBar {
         exitMenu.setMnemonic(KeyEvent.VK_E);
         exitMenu.getAccessibleContext().setAccessibleDescription(
                 "Выход из программы");
-        JMenuItem exitMenuItem = new JMenuItem("Exit", KeyEvent.VK_E);
+        JMenuItem exitMenuItem = new JMenuItem("Exit", KeyEvent.VK_X);
         exitMenuItem.addActionListener((event) ->
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
                         new WindowEvent(frame, WindowEvent.WINDOW_CLOSING))

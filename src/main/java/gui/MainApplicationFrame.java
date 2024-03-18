@@ -1,4 +1,4 @@
-package gui.windowmanager;
+package gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -6,8 +6,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 
-import gui.GameWindow;
-import gui.LogWindow;
 import log.Logger;
 
 
@@ -103,7 +101,7 @@ public class MainApplicationFrame extends JFrame {
     }
 
     /**
-     * Обрабатывает выход из программы
+        Обрабатывает выход из программы
      */
     private void handleWindowClosingEvent() {
         int option = JOptionPane.showOptionDialog(
