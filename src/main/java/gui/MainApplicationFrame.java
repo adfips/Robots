@@ -1,41 +1,38 @@
 package gui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import log.Logger;
+import saving.Savable;
+import saving.WindowSettings;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.*;
-
-import log.Logger;
+import java.util.Properties;
 
 
 /**
  * Главное окно программы
  */
-public class MainApplicationFrame extends JFrame {
+public class MainApplicationFrame extends JFrame implements Savable {
     private final JDesktopPane desktopPane = new JDesktopPane();
 
+    private final WindowSettings windowSettings = new WindowSettings();
+
     public MainApplicationFrame() {
-        //Make the big window be indented 50 pixels from each edge
-        //of the screen.
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(inset, inset,
-                screenSize.width - inset * 2,
-                screenSize.height - inset * 2);
-
+        setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
         setContentPane(desktopPane);
 
+        addWindow(createLogWindow());
+        addWindow(createGameWindow());
 
-        LogWindow logWindow = createLogWindow();
-        addWindow(logWindow);
-
-        GameWindow gameWindow = new GameWindow();
-        gameWindow.setSize(400, 400);
-        addWindow(gameWindow);
+        windowSettings.loadProperties(desktopPane.getAllFrames());
 
         setJMenuBar(new MenuBar(this));
         initWindowCloseListener();
+
     }
 
     /**
@@ -49,6 +46,16 @@ public class MainApplicationFrame extends JFrame {
         logWindow.pack();
         Logger.debug("Протокол работает");
         return logWindow;
+    }
+
+    /**
+     * Создание окна с Роботом
+     */
+    protected GameWindow createGameWindow() {
+        GameWindow gameWindow = new GameWindow();
+        gameWindow.setSize(400, 400);
+        gameWindow.setLocation(0, 0);
+        return gameWindow;
     }
 
     /**
@@ -76,7 +83,7 @@ public class MainApplicationFrame extends JFrame {
     /**
      * Изменение фона главного окна программы
      */
-    private void setLookAndFeel(String className) {
+    protected void setLookAndFeel(String className) {
         try {
             UIManager.setLookAndFeel(className);
             SwingUtilities.updateComponentTreeUI(this);
@@ -95,13 +102,14 @@ public class MainApplicationFrame extends JFrame {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
+                windowSettings.saveProperties(desktopPane.getAllFrames());
                 handleWindowClosingEvent();
             }
         });
     }
 
     /**
-        Обрабатывает выход из программы
+     * При закрытии приложения, открывается окно для подтверждения
      */
     private void handleWindowClosingEvent() {
         int option = JOptionPane.showOptionDialog(
@@ -117,4 +125,43 @@ public class MainApplicationFrame extends JFrame {
             setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
+    @Override
+    public void save() {
+        Properties properties = WindowSettings.getProperty();
+        String name = getClass().getName();
+        properties.setProperty(
+                name + "_size", getSize().width + "," + getSize().height);
+        properties.setProperty(
+                name + "_location", getLocation().x + "," + getLocation().y);
+    }
+
+
+    @Override
+    public void load() {
+        Properties properties = WindowSettings.getProperty();
+        String name = getClass().getName();
+        String sizeStr = properties.getProperty(name + "_size");
+        String locationStr = properties.getProperty(name + "_location");
+        if (sizeStr != null && locationStr != null) {
+
+            Dimension size = parseDimension(sizeStr);
+            Point location = parsePoint(locationStr);
+            setSize(size);
+            setLocation(location);
+        }
+    }
+
+    private Dimension parseDimension(String str) {
+        String[] parts = str.split(",");
+        int width = Integer.parseInt(parts[0].trim());
+        int height = Integer.parseInt(parts[1].trim());
+        return new Dimension(width, height);
+    }
+
+    private Point parsePoint(String str) {
+        String[] parts = str.split(",");
+        int x = Integer.parseInt(parts[0].trim());
+        int y = Integer.parseInt(parts[1].trim());
+        return new Point(x, y);
+    }
 }
