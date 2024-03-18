@@ -62,9 +62,23 @@ public class MainApplicationFrame extends JFrame {
     }
 
     /**
+     * Системный фон
+     */
+    public void setSystemLookAndFeel() {
+        setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    }
+
+    /**
+     * Универсальный фон
+     */
+    public void setCrossPlatformLookAndFeel() {
+        setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    }
+
+    /**
      * Изменение фона главного окна программы
      */
-    protected void setLookAndFeel(String className) {
+    private void setLookAndFeel(String className) {
         try {
             UIManager.setLookAndFeel(className);
             SwingUtilities.updateComponentTreeUI(this);
@@ -89,7 +103,7 @@ public class MainApplicationFrame extends JFrame {
     }
 
     /**
-     * При закрытии приложения, открывается окно для подтверждения
+     * Обрабатывает выход из программы
      */
     private void handleWindowClosingEvent() {
         int option = JOptionPane.showOptionDialog(

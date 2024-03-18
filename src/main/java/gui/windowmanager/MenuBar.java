@@ -28,24 +28,24 @@ public class MenuBar extends JMenuBar {
      * Создает поле меню отвечающее за режим отображение
      */
     private JMenu createLookAndFeelMenu() {
-        JMenu lookAndFeelMenu = new JMenu("Режим отображения");
-        lookAndFeelMenu.setMnemonic(KeyEvent.VK_V);
+        JMenu lookAndFeelMenu = new JMenu("Display mode");
+        lookAndFeelMenu.setMnemonic(KeyEvent.VK_D);
         lookAndFeelMenu.getAccessibleContext().setAccessibleDescription(
                 "Управление режимом отображения приложения");
 
-        JMenuItem systemLookAndFeel = new JMenuItem("Системная схема", KeyEvent.VK_S);
+        JMenuItem systemLookAndFeel = new JMenuItem("System scheme", KeyEvent.VK_S);
         systemLookAndFeel.addActionListener((event) -> {
-            frame.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            frame.setSystemLookAndFeel();
             this.invalidate();
         });
         lookAndFeelMenu.add(systemLookAndFeel);
 
-        JMenuItem crossplatformLookAndFeel = new JMenuItem("Универсальная схема", KeyEvent.VK_S);
-        crossplatformLookAndFeel.addActionListener((event) -> {
-            frame.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        JMenuItem crossPlatformLookAndFeel = new JMenuItem("Universal scheme", KeyEvent.VK_U);
+        crossPlatformLookAndFeel.addActionListener((event) -> {
+            frame.setCrossPlatformLookAndFeel();
             this.invalidate();
         });
-        lookAndFeelMenu.add(crossplatformLookAndFeel);
+        lookAndFeelMenu.add(crossPlatformLookAndFeel);
         return lookAndFeelMenu;
     }
 
@@ -53,12 +53,12 @@ public class MenuBar extends JMenuBar {
      * Создает поле меню отвечающее за тесты
      */
     private JMenu createTestMenu() {
-        JMenu testMenu = new JMenu("Тесты");
+        JMenu testMenu = new JMenu("Tests");
         testMenu.setMnemonic(KeyEvent.VK_T);
         testMenu.getAccessibleContext().setAccessibleDescription(
                 "Тестовые команды");
 
-        JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
+        JMenuItem addLogMessageItem = new JMenuItem("Message in log", KeyEvent.VK_M);
         addLogMessageItem.addActionListener((event) ->
                 Logger.debug("Новая строка"));
         testMenu.add(addLogMessageItem);
@@ -69,11 +69,11 @@ public class MenuBar extends JMenuBar {
      * Создает поле меню отвечающее за выход
      */
     private JMenu createExitMenu() {
-        JMenu exitMenu = new JMenu("Выход");
+        JMenu exitMenu = new JMenu("Exit");
         exitMenu.setMnemonic(KeyEvent.VK_E);
         exitMenu.getAccessibleContext().setAccessibleDescription(
                 "Выход из программы");
-        JMenuItem exitMenuItem = new JMenuItem("Выход", KeyEvent.VK_S);
+        JMenuItem exitMenuItem = new JMenuItem("Exit", KeyEvent.VK_E);
         exitMenuItem.addActionListener((event) ->
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
                         new WindowEvent(frame, WindowEvent.WINDOW_CLOSING))
