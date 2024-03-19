@@ -2,6 +2,7 @@ package saving;
 
 import java.awt.*;
 import java.io.*;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -30,10 +31,11 @@ public class WindowSettings {
     /**
      * Сохраняет все переданные окна
      */
-    public void saveProperties(Component[] windows) {
+    public void saveProperties(List<Component> windows) {
         for (Component component : windows)
-            if (component instanceof Savable window)
+            if (component instanceof Savable window){
                 window.save();
+            }
 
         try (OutputStream outputStream = new FileOutputStream(configFile, true)) {
             properties.store(outputStream, "Window properties");
@@ -46,7 +48,7 @@ public class WindowSettings {
     /**
          Загружает свойства в переданные окна
      */
-    public void loadProperties(Component[] windows) {
+    public void loadProperties(List<Component> windows) {
         try {
             if (configFile.createNewFile())
                 return;

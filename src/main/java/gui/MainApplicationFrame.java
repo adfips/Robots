@@ -8,6 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -24,11 +27,10 @@ public class MainApplicationFrame extends JFrame implements Savable {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
         setContentPane(desktopPane);
-
         addWindow(createLogWindow());
         addWindow(createGameWindow());
 
-        windowSettings.loadProperties(desktopPane.getAllFrames());
+        windowSettings.loadProperties(getAllComponents());
 
         setJMenuBar(new MenuBar(this));
         initWindowCloseListener();
@@ -93,6 +95,11 @@ public class MainApplicationFrame extends JFrame implements Savable {
         }
     }
 
+    public List<Component> getAllComponents() {
+        List<Component> allComponents = new ArrayList<>(List.of(desktopPane.getAllFrames()));
+        allComponents.add(this);
+        return allComponents;
+    }
     /**
      * Добавляет слушателя WindowListener к frame,
      * который реагирует на событие закрытия окна.
@@ -102,7 +109,7 @@ public class MainApplicationFrame extends JFrame implements Savable {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                windowSettings.saveProperties(desktopPane.getAllFrames());
+                windowSettings.saveProperties(getAllComponents());
                 handleWindowClosingEvent();
             }
         });
@@ -143,7 +150,6 @@ public class MainApplicationFrame extends JFrame implements Savable {
         String sizeStr = properties.getProperty(name + "_size");
         String locationStr = properties.getProperty(name + "_location");
         if (sizeStr != null && locationStr != null) {
-
             Dimension size = parseDimension(sizeStr);
             Point location = parsePoint(locationStr);
             setSize(size);
