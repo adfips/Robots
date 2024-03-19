@@ -3,17 +3,17 @@ package saving;
 import java.util.Properties;
 
 /**
-  Интерфейс сохранения и загрузки данных
+ * Интерфейс сохранения и загрузки данных
  */
 public interface Savable {
 
     /**
-     * Сохраняет состояние окна в {@link  WindowSettings#properties}
+     * Сохраняет состояние окна
      */
-    void save();
+    void save(Properties properties);
 
     /**
-     * Загружает состояние окна из {@link Properties}
+     * Загружает состояние окна
      */
-    void load();
+    void load(Properties properties);
 }

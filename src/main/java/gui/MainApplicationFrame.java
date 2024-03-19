@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -100,6 +99,7 @@ public class MainApplicationFrame extends JFrame implements Savable {
         allComponents.add(this);
         return allComponents;
     }
+
     /**
      * Добавляет слушателя WindowListener к frame,
      * который реагирует на событие закрытия окна.
@@ -133,41 +133,31 @@ public class MainApplicationFrame extends JFrame implements Savable {
     }
 
     @Override
-    public void save() {
-        Properties properties = WindowSettings.getProperty();
+    public void save(Properties properties) {
         String name = getClass().getName();
         properties.setProperty(
-                name + "_size", getSize().width + "," + getSize().height);
-        properties.setProperty(
-                name + "_location", getLocation().x + "," + getLocation().y);
+                name + "_bounds",
+                String.format("%d,%d,%d,%d",getBounds().x,getBounds().y,getBounds().width,getBounds().height)
+        );
     }
 
 
     @Override
-    public void load() {
-        Properties properties = WindowSettings.getProperty();
+    public void load(Properties properties) {
         String name = getClass().getName();
-        String sizeStr = properties.getProperty(name + "_size");
-        String locationStr = properties.getProperty(name + "_location");
-        if (sizeStr != null && locationStr != null) {
-            Dimension size = parseDimension(sizeStr);
-            Point location = parsePoint(locationStr);
-            setSize(size);
-            setLocation(location);
+        String bounds = properties.getProperty(name + "_bounds");
+        if (bounds != null) {
+            Rectangle rectangle = parseRectangle(bounds);
+            setBounds(rectangle);
         }
     }
 
-    private Dimension parseDimension(String str) {
+    private Rectangle parseRectangle(String str) {
         String[] parts = str.split(",");
-        int width = Integer.parseInt(parts[0].trim());
-        int height = Integer.parseInt(parts[1].trim());
-        return new Dimension(width, height);
-    }
-
-    private Point parsePoint(String str) {
-        String[] parts = str.split(",");
-        int x = Integer.parseInt(parts[0].trim());
-        int y = Integer.parseInt(parts[1].trim());
-        return new Point(x, y);
+        int x = Integer.parseInt(parts[0]);
+        int y = Integer.parseInt(parts[1]);
+        int width = Integer.parseInt(parts[2]);
+        int height = Integer.parseInt(parts[3]);
+        return new Rectangle(x, y, width, height);
     }
 }

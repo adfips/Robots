@@ -10,33 +10,28 @@ import java.util.Properties;
  */
 public class WindowSettings {
     /**
-     * Структура свойств окон
-     */
-    private static Properties properties;
-    /**
-     * Файл где хранятся {@link #properties свойства}
+     * Файлы, где хранятся свойства окон
      */
     private final File configFile;
 
     /**
-     * Конструктор добавляющий {@link #configFile путь к файлу}
+     * Конструктор создающий {@link #configFile путь к файлу}
      */
     public WindowSettings() {
         configFile = new File(
                 System.getProperty("user.home") + "/config.txt"
         ).getAbsoluteFile();
-        properties = new Properties();
     }
 
     /**
      * Сохраняет все переданные окна
      */
     public void saveProperties(List<Component> windows) {
+        Properties properties = new Properties();
         for (Component component : windows)
-            if (component instanceof Savable window){
-                window.save();
+            if (component instanceof Savable window) {
+                window.save(properties);
             }
-
         try (OutputStream outputStream = new FileOutputStream(configFile, true)) {
             properties.store(outputStream, "Window properties");
         } catch (IOException e) {
@@ -46,7 +41,7 @@ public class WindowSettings {
     }
 
     /**
-         Загружает свойства в переданные окна
+     * Загружает свойства в переданные окна
      */
     public void loadProperties(List<Component> windows) {
         try {
@@ -56,20 +51,16 @@ public class WindowSettings {
             throw new RuntimeException(e);
         }
         try (InputStream inputStream = new FileInputStream(configFile)) {
+            Properties properties = new Properties();
             properties.load(inputStream);
             for (Component component : windows)
                 if (component instanceof Savable window)
-                    window.load();
+                    window.load(properties);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-
-    /**
-        Получение свойств окон
-     */
-    public static Properties getProperty() {return properties;}
 
 }

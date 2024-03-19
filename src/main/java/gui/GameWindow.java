@@ -1,14 +1,11 @@
 package gui;
 
-import saving.WindowSettings;
 import saving.Savable;
 
+import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyVetoException;
 import java.util.Properties;
-
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
 
 public class GameWindow extends JInternalFrame implements Savable {
     private final GameVisualizer m_visualizer;
@@ -23,28 +20,24 @@ public class GameWindow extends JInternalFrame implements Savable {
     }
 
     @Override
-    public void save() {
-        Properties properties = WindowSettings.getProperty();
+    public void save(Properties properties) {
         String name = getClass().getName();
         properties.setProperty(
-                name + "_size", getSize().width + "," + getSize().height);
-        properties.setProperty(
-                name + "_location", getLocation().x + "," + getLocation().y);
+                name + "_bounds",
+                String.format("%d,%d,%d,%d",getBounds().x,getBounds().y,getBounds().width,getBounds().height)
+        );
         properties.setProperty(
                 name + "_isIcon", String.valueOf(isIcon()));
     }
 
     @Override
-    public void load() {
-        Properties properties = WindowSettings.getProperty();
-        String sizeStr = properties.getProperty(getClass().getName() + "_size");
-        String locationStr = properties.getProperty(getClass().getName() + "_location");
-        String icon = properties.getProperty(getClass().getName() + "_isIcon");
-        if (sizeStr != null && locationStr != null) {
-            Dimension size = parseDimension(sizeStr);
-            Point location = parsePoint(locationStr);
-            setSize(size);
-            setLocation(location);
+    public void load(Properties properties) {
+        String name = getClass().getName();
+        String bounds = properties.getProperty(name + "_bounds");
+        String icon = properties.getProperty(name + "_isIcon");
+        if (bounds != null) {
+            Rectangle rectangle = parseRectangle(bounds);
+            setBounds(rectangle);
             try {
                 setIcon(Boolean.parseBoolean(icon));
             } catch (PropertyVetoException e) {
@@ -53,17 +46,12 @@ public class GameWindow extends JInternalFrame implements Savable {
         }
     }
 
-    private Dimension parseDimension(String str) {
+    private Rectangle parseRectangle(String str) {
         String[] parts = str.split(",");
-        int width = Integer.parseInt(parts[0].trim());
-        int height = Integer.parseInt(parts[1].trim());
-        return new Dimension(width, height);
-    }
-
-    private Point parsePoint(String str) {
-        String[] parts = str.split(",");
-        int x = Integer.parseInt(parts[0].trim());
-        int y = Integer.parseInt(parts[1].trim());
-        return new Point(x, y);
+        int x = Integer.parseInt(parts[0]);
+        int y = Integer.parseInt(parts[1]);
+        int width = Integer.parseInt(parts[2]);
+        int height = Integer.parseInt(parts[3]);
+        return new Rectangle(x, y, width, height);
     }
 }
