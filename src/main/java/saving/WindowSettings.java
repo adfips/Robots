@@ -15,7 +15,7 @@ public class WindowSettings {
     private final File configFile;
 
     /**
-     * Конструктор создающий {@link #configFile путь к файлу}
+     * Конструктор задающий {@link #configFile путь к файлу}
      */
     public WindowSettings() {
         configFile = new File(
@@ -29,10 +29,10 @@ public class WindowSettings {
     public void saveProperties(List<Component> windows) {
         Properties properties = new Properties();
         for (Component component : windows)
-            if (component instanceof Savable window) {
+            if (component instanceof Savable window)
                 window.save(properties);
-            }
-        try (OutputStream outputStream = new FileOutputStream(configFile, true)) {
+
+        try (OutputStream outputStream = new FileOutputStream(configFile)) {
             properties.store(outputStream, "Window properties");
         } catch (IOException e) {
             System.out.println(e.getMessage());

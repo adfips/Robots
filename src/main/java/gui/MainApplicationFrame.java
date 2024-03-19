@@ -137,7 +137,7 @@ public class MainApplicationFrame extends JFrame implements Savable {
         String name = getClass().getName();
         properties.setProperty(
                 name + "_bounds",
-                String.format("%d,%d,%d,%d",getBounds().x,getBounds().y,getBounds().width,getBounds().height)
+                String.format("%d,%d,%d,%d", getBounds().x, getBounds().y, getBounds().width, getBounds().height)
         );
     }
 
