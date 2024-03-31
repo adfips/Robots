@@ -21,7 +21,7 @@ public class GameWindow extends JInternalFrame implements Savable {
 
     @Override
     public void save(Properties properties) {
-        String name = getClass().getName();
+        String name = "GameWindow";
         properties.setProperty(
                 name + "_bounds",
                 String.format("%d,%d,%d,%d", getBounds().x, getBounds().y, getBounds().width, getBounds().height)
@@ -41,7 +41,7 @@ public class GameWindow extends JInternalFrame implements Savable {
             try {
                 setIcon(Boolean.parseBoolean(icon));
             } catch (PropertyVetoException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Неприемлемое значение: " + icon, e);
             }
         }
     }

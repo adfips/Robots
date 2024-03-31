@@ -8,9 +8,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 
 /**
@@ -52,7 +55,7 @@ public class MainApplicationFrame extends JFrame implements Savable {
     /**
      * Создание окна с Роботом
      */
-    protected GameWindow createGameWindow() {
+    private GameWindow createGameWindow() {
         GameWindow gameWindow = new GameWindow();
         gameWindow.setSize(400, 400);
         gameWindow.setLocation(0, 0);
@@ -84,7 +87,7 @@ public class MainApplicationFrame extends JFrame implements Savable {
     /**
      * Изменение фона главного окна программы
      */
-    protected void setLookAndFeel(String className) {
+    private void setLookAndFeel(String className) {
         try {
             UIManager.setLookAndFeel(className);
             SwingUtilities.updateComponentTreeUI(this);
@@ -94,10 +97,11 @@ public class MainApplicationFrame extends JFrame implements Savable {
         }
     }
 
-    public List<Component> getAllComponents() {
-        List<Component> allComponents = new ArrayList<>(List.of(desktopPane.getAllFrames()));
-        allComponents.add(this);
-        return allComponents;
+    public List<? extends Component> getAllComponents() {
+        return Stream.concat(
+                Stream.of(this),
+                Arrays.stream(desktopPane.getAllFrames())
+        ).toList();
     }
 
     /**
@@ -134,7 +138,7 @@ public class MainApplicationFrame extends JFrame implements Savable {
 
     @Override
     public void save(Properties properties) {
-        String name = getClass().getName();
+        String name = "MainApplicationFrame";
         properties.setProperty(
                 name + "_bounds",
                 String.format("%d,%d,%d,%d", getBounds().x, getBounds().y, getBounds().width, getBounds().height)

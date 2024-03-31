@@ -44,7 +44,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Sava
 
     @Override
     public void save(Properties properties) {
-        String name = getClass().getName();
+        String name = "LogWindow";
         properties.setProperty(
                 name + "_bounds",
                 String.format("%d,%d,%d,%d", getBounds().x, getBounds().y, getBounds().width, getBounds().height)
@@ -64,7 +64,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Sava
             try {
                 setIcon(Boolean.parseBoolean(icon));
             } catch (PropertyVetoException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Неприемлемое значение: " + icon, e);
             }
         }
     }
