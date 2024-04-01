@@ -8,8 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.AreaAveragingScaleFilter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -138,30 +136,12 @@ public class MainApplicationFrame extends JFrame implements Savable {
 
     @Override
     public void save(Properties properties) {
-        String name = "MainApplicationFrame";
-        properties.setProperty(
-                name + "_bounds",
-                String.format("%d,%d,%d,%d", getBounds().x, getBounds().y, getBounds().width, getBounds().height)
-        );
+        saveWindowBounds(this, properties, "MainApplicationFrame");
     }
 
 
     @Override
     public void load(Properties properties) {
-        String name = getClass().getName();
-        String bounds = properties.getProperty(name + "_bounds");
-        if (bounds != null) {
-            Rectangle rectangle = parseRectangle(bounds);
-            setBounds(rectangle);
-        }
-    }
-
-    private Rectangle parseRectangle(String str) {
-        String[] parts = str.split(",");
-        int x = Integer.parseInt(parts[0]);
-        int y = Integer.parseInt(parts[1]);
-        int width = Integer.parseInt(parts[2]);
-        int height = Integer.parseInt(parts[3]);
-        return new Rectangle(x, y, width, height);
+        loadWindowBounds(this, properties, "MainApplicationFrame");
     }
 }
