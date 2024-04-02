@@ -27,6 +27,12 @@ public class WindowSettings {
      * Сохраняет все переданные окна
      */
     public void saveProperties(List<? extends Component> windows) {
+        try {
+            if (configFile.createNewFile())
+                return;
+        } catch (IOException e) {
+            throw new RuntimeException("Не удалось обратиться к файлу: " + configFile, e);
+        }
         Properties properties = new Properties();
         for (Component component : windows)
             if (component instanceof Savable window)
@@ -43,12 +49,8 @@ public class WindowSettings {
      * Загружает свойства в переданные окна
      */
     public void loadProperties(List<? extends Component> windows) {
-        try {
-            if (configFile.createNewFile())
-                return;
-        } catch (IOException e) {
-            throw new RuntimeException("Не удалось обратиться к файлу: " + configFile, e);
-        }
+        if (!configFile.exists())
+            return;
         try (InputStream inputStream = new FileInputStream(configFile)) {
             Properties properties = new Properties();
             properties.load(inputStream);
