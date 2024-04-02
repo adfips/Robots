@@ -28,8 +28,8 @@ public class WindowSettings {
      */
     public void saveProperties(List<? extends Component> windows) {
         try {
-            if (!configFile.createNewFile())
-                return;
+            if (!configFile.exists())
+                configFile.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException("Не удалось обратиться к файлу: " + configFile, e);
         }
