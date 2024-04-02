@@ -43,12 +43,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Sava
     }
 
     @Override
-    public void save(Properties properties) {
-        saveWindowBounds(this, properties, "LogWindow");
-    }
-
-    @Override
-    public void load(Properties properties) {
-        loadWindowBounds(this, properties, "LogWindow");
+    public String getFrameId() {
+        return "Log";
     }
 }

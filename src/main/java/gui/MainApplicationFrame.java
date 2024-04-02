@@ -134,14 +134,9 @@ public class MainApplicationFrame extends JFrame implements Savable {
             setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-    @Override
-    public void save(Properties properties) {
-        saveWindowBounds(this, properties, "MainApplicationFrame");
-    }
-
 
     @Override
-    public void load(Properties properties) {
-        loadWindowBounds(this, properties, "MainApplicationFrame");
+    public String getFrameId() {
+        return "Main";
     }
 }

@@ -18,13 +18,9 @@ public class GameWindow extends JInternalFrame implements Savable {
         pack();
     }
 
-    @Override
-    public void save(Properties properties) {
-        saveWindowBounds(this, properties, "GameWindow");
-    }
 
     @Override
-    public void load(Properties properties) {
-        loadWindowBounds(this, properties, "GameWindow");
+    public String getFrameId() {
+        return "Game";
     }
 }
