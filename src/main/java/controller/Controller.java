@@ -2,6 +2,7 @@ package controller;
 
 import model.Robot;
 
+import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -12,20 +13,14 @@ public class Controller {
     /**
      * Экземпляр робота, который управляется данным контроллером.
      */
-    Robot robot;
+    private final Robot robot;
 
     /**
      * Конструктор. <br>
      * Создает экземпляр робота для управления.
      */
-    public Controller() {
-        this.robot = new Robot();
-    }
-
-    /**
-     * Начинает выполнение цикла обновления модели робота с определенной частотой.
-     */
-    public void start() {
+    public Controller(Robot robot) {
+        this.robot = robot;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -34,8 +29,7 @@ public class Controller {
         }, 0, 10);
     }
 
-
-    public Robot getRobot() {
-        return robot;
+    public void setTargetPosition(Point point) {
+        robot.setTargetPosition(point);
     }
 }

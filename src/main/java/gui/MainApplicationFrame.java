@@ -2,6 +2,7 @@ package gui;
 
 import controller.Controller;
 import log.Logger;
+import model.Robot;
 import saving.Savable;
 import saving.WindowSettings;
 
@@ -28,16 +29,17 @@ public class MainApplicationFrame extends JFrame implements Savable {
         setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
         setContentPane(desktopPane);
 
-        Controller controller = new Controller();
+
+        Robot robot = new Robot();
+        Controller controller = new Controller(robot);
         addWindow(createLogWindow());
-        addWindow(new GameWindow(controller));
-        addWindow(new CoordinateRobotWindow(controller));
+        addWindow(new GameWindow(controller, robot));
+        addWindow(new CoordinateRobotWindow(robot));
 
         windowSettings.loadProperties(getAllComponents());
 
         setJMenuBar(new MenuBar(this));
         initWindowCloseListener();
-        controller.start();
 
     }
 

@@ -22,13 +22,12 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
      * Получает робота из контролера
      * Добавляет {@link Robot роботу} {@link GameVisualizer представление} за которым нужно отслеживать обновления
      */
-    public GameVisualizer(Controller controller) {
-        robot = controller.getRobot();
+    public GameVisualizer(Controller controller, Robot robot) {
         robot.addListener(this);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                robot.setTargetPosition(e.getPoint());
+                controller.setTargetPosition(e.getPoint());
                 repaint();
             }
         });
@@ -47,8 +46,8 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        drawRobot(g2d, round(robot.getM_robotPositionX()), round(robot.getM_robotPositionY()), robot.getM_robotDirection());
-        drawTarget(g2d, robot.getM_targetPositionX(), robot.getM_targetPositionY());
+        drawRobot(g2d, round(robot.getMRobotPositionX()), round(robot.getMRobotPositionY()), robot.getMRobotDirection());
+        drawTarget(g2d, robot.getMTargetPositionX(), robot.getMTargetPositionY());
     }
 
     private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
@@ -60,8 +59,8 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
     }
 
     private void drawRobot(Graphics2D g, int x, int y, double direction) {
-        int robotCenterX = round(robot.getM_robotPositionX());
-        int robotCenterY = round(robot.getM_robotPositionY());
+        int robotCenterX = round(robot.getMRobotPositionX());
+        int robotCenterY = round(robot.getMRobotPositionY());
         AffineTransform t = AffineTransform.getRotateInstance(direction, robotCenterX, robotCenterY);
         g.setTransform(t);
         g.setColor(Color.MAGENTA);
@@ -88,7 +87,7 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("propertyName")) {
+        if (evt.getPropertyName().equals("updateModel")) {
             robot = (Robot) evt.getNewValue();
             onRedrawEvent();
         }

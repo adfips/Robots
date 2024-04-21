@@ -134,30 +134,30 @@ public class Robot {
      * Уведомление слушателей об изменении модели
      */
     public void notifyUpdate(){
-        propertyChangeSupport.firePropertyChange("propertyName",null,this);
+        propertyChangeSupport.firePropertyChange("updateModel",null,this);
     }
 
     public void addListener(PropertyChangeListener listener){
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
-    public double getM_robotPositionX() {
+    public double getMRobotPositionX() {
         return m_robotPositionX;
     }
 
-    public double getM_robotPositionY() {
+    public double getMRobotPositionY() {
         return m_robotPositionY;
     }
 
-    public double getM_robotDirection() {
+    public double getMRobotDirection() {
         return m_robotDirection;
     }
 
-    public int getM_targetPositionX() {
+    public int getMTargetPositionX() {
         return m_targetPositionX;
     }
 
-    public int getM_targetPositionY() {
+    public int getMTargetPositionY() {
         return m_targetPositionY;
     }
 

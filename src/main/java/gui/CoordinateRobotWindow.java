@@ -1,7 +1,6 @@
 package gui;
 
 
-import controller.Controller;
 import model.Robot;
 import saving.Savable;
 
@@ -22,9 +21,9 @@ public class CoordinateRobotWindow extends JInternalFrame implements PropertyCha
      * Добавляем модели прослушивание представления
      * Собираем окно
      */
-    public CoordinateRobotWindow(Controller controller) {
+    public CoordinateRobotWindow(Robot robot) {
         super("Координаты робота", true, true, true, true);
-        controller.getRobot().addListener(this);
+        robot.addListener(this);
         setSize(300, 200);
 
         JPanel panel = new JPanel();
@@ -51,9 +50,9 @@ public class CoordinateRobotWindow extends JInternalFrame implements PropertyCha
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("propertyName")) {
+        if (evt.getPropertyName().equals("updateModel")) {
             Robot robot = (Robot) evt.getNewValue();
-            this.setNumbers(robot.getM_robotPositionX(), robot.getM_robotPositionY());
+            this.setNumbers(robot.getMRobotPositionX(), robot.getMRobotPositionY());
         }
     }
 
