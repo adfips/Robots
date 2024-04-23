@@ -1,6 +1,8 @@
 package gui;
 
+import controller.Controller;
 import log.Logger;
+import model.Robot;
 import saving.Savable;
 import saving.WindowSettings;
 
@@ -10,7 +12,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Stream;
 
 
@@ -27,8 +28,13 @@ public class MainApplicationFrame extends JFrame implements Savable {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
         setContentPane(desktopPane);
+
+
+        Robot robot = new Robot();
+        Controller controller = new Controller(robot);
         addWindow(createLogWindow());
-        addWindow(createGameWindow());
+        addWindow(new GameWindow(controller, robot));
+        addWindow(new CoordinateRobotWindow(robot));
 
         windowSettings.loadProperties(getAllComponents());
 
@@ -48,16 +54,6 @@ public class MainApplicationFrame extends JFrame implements Savable {
         logWindow.pack();
         Logger.debug("Протокол работает");
         return logWindow;
-    }
-
-    /**
-     * Создание окна с Роботом
-     */
-    private GameWindow createGameWindow() {
-        GameWindow gameWindow = new GameWindow();
-        gameWindow.setSize(400, 400);
-        gameWindow.setLocation(0, 0);
-        return gameWindow;
     }
 
     /**
