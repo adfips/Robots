@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static java.lang.Math.min;
+
 /**
  * Класс для хранения логов с ограниченным размером.
  */
@@ -29,6 +31,7 @@ public class BoundedLogQueue {
      * Блокировка для потокобезопасности
      */
     private final Lock lock = new ReentrantLock();
+    private int size;
 
     /**
      * Создает новую очередь логов с заданным размером.
@@ -40,6 +43,7 @@ public class BoundedLogQueue {
         this.queue = new LogEntry[capacity];
         this.head = 0;
         this.tail = 0;
+        this.size = 0;
     }
 
     /**
@@ -52,8 +56,10 @@ public class BoundedLogQueue {
         try {
             queue[tail] = entry;
             tail = (tail + 1) % capacity;
-            if ((tail + 1) % capacity == head)
+            if (size == capacity)
                 head = (head + 1) % capacity;
+            else
+                size++;
         } finally {
             lock.unlock();
         }
@@ -70,11 +76,8 @@ public class BoundedLogQueue {
         lock.lock();
         try {
             List<LogEntry> result = new ArrayList<>();
-            int index = (head + startFrom) % capacity;
-            int endIndex = (index + count) % capacity;
-            for (int i = 0; i < count && index != endIndex; i++) {
-                result.add(queue[index]);
-                index = (index + 1) % capacity;
+            for (int i = 0; i < count; i++){
+                result.add(queue[(head + startFrom + i) % capacity]);
             }
             return result;
         } finally {
@@ -98,6 +101,6 @@ public class BoundedLogQueue {
      * Возвращает текущее количество логов в очереди.
      */
     public int size() {
-        return (tail - head + capacity) % capacity;
+        return min(size,capacity);
     }
 }

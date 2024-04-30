@@ -1,7 +1,9 @@
 package log;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Что починить:
@@ -17,7 +19,7 @@ public class LogWindowSource
     private int m_iQueueLength;
 
     private BoundedLogQueue m_messages;
-    private final ArrayList<LogChangeListener> m_listeners;
+    private final ArrayList<WeakReference<LogChangeListener>> m_listeners;
     private volatile LogChangeListener[] m_activeListeners;
 
     public LogWindowSource(int iQueueLength)
@@ -30,7 +32,8 @@ public class LogWindowSource
     {
         synchronized(m_listeners)
         {
-            m_listeners.add(listener);
+            m_listeners.add(new WeakReference<>(listener));
+            m_activeListeners = null;
         }
     }
 
@@ -38,7 +41,8 @@ public class LogWindowSource
     {
         synchronized(m_listeners)
         {
-            m_listeners.remove(listener);
+            m_listeners.remove(new WeakReference<>(listener));
+            m_activeListeners = null;
         }
     }
 
@@ -60,8 +64,17 @@ public class LogWindowSource
         {
             synchronized (m_listeners)
             {
-                activeListeners = m_listeners.toArray(new LogChangeListener[0]);
-                m_activeListeners = activeListeners;
+                if (m_activeListeners == null)
+                {
+                    List<LogChangeListener> listeners = new ArrayList<>();
+                    for (WeakReference<LogChangeListener> reference : m_listeners) {
+                        LogChangeListener listener = reference.get();
+                        if (listener != null)
+                            listeners.add(listener);
+                    }
+                    activeListeners = listeners.toArray(new LogChangeListener[0]);
+                    m_activeListeners = activeListeners;
+                }
             }
         }
         return activeListeners;
