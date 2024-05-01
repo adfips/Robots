@@ -20,7 +20,7 @@ public class LogWindowSource
 
     private BoundedLogQueue m_messages;
     private final ArrayList<WeakReference<LogChangeListener>> m_listeners;
-    private volatile LogChangeListener[] m_activeListeners;
+    private volatile ArrayList<WeakReference<LogChangeListener>> m_activeListeners;
 
 
     public LogWindowSource(int iQueueLength)
@@ -34,6 +34,7 @@ public class LogWindowSource
         synchronized(m_listeners)
         {
             m_listeners.add(new WeakReference<>(listener));
+            m_activeListeners = null;
         }
     }
 
@@ -53,23 +54,24 @@ public class LogWindowSource
     public void append(LogLevel logLevel, String strMessage) {
         LogEntry entry = new LogEntry(logLevel, strMessage);
         m_messages.add(entry);
-        LogChangeListener[] activeListeners = m_activeListeners;
-        if (activeListeners == null) {
+        if (m_activeListeners == null) {
             synchronized (m_listeners) {
                 if (m_activeListeners == null) {
-                    List<LogChangeListener> listeners = new ArrayList<>();
+                    m_activeListeners = new ArrayList<>();
                     for (WeakReference<LogChangeListener> ref : m_listeners) {
                         LogChangeListener listener = ref.get();
                         if (listener != null) {
-                            listeners.add(listener);
+                            m_activeListeners.add(ref);
                         }
                     }
-                    m_activeListeners = listeners.toArray(new LogChangeListener[0]);
                 }
             }
         }
-        for (LogChangeListener listener : m_activeListeners) {
-            listener.onLogChanged();
+        for (WeakReference<LogChangeListener> ref : m_activeListeners) {
+            LogChangeListener listener = ref.get();
+            if (listener != null) {
+                listener.onLogChanged();
+            }
         }
     }
 
