@@ -19,8 +19,8 @@ public class LogWindowSource
     private int m_iQueueLength;
 
     private BoundedLogQueue m_messages;
-    private final ArrayList<WeakReference<LogChangeListener>> m_listeners;
-    private volatile ArrayList<WeakReference<LogChangeListener>> m_activeListeners;
+    private final List<WeakReference<LogChangeListener>> m_listeners;
+    private volatile List<WeakReference<LogChangeListener>> m_activeListeners;
 
 
     public LogWindowSource(int iQueueLength)
