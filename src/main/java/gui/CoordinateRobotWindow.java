@@ -1,6 +1,8 @@
 package gui;
 
 
+import locale.LocalizationListener;
+import locale.LocalizationManager;
 import model.Robot;
 import saving.Savable;
 
@@ -12,7 +14,8 @@ import java.beans.PropertyChangeListener;
 /**
  * Окно с координатами робота
  */
-public class CoordinateRobotWindow extends JInternalFrame implements PropertyChangeListener, Savable {
+public class CoordinateRobotWindow extends JInternalFrame implements PropertyChangeListener, Savable,
+        LocalizationListener {
     private final JLabel labelX;
     private final JLabel labelY;
 
@@ -22,7 +25,7 @@ public class CoordinateRobotWindow extends JInternalFrame implements PropertyCha
      * Собираем окно
      */
     public CoordinateRobotWindow(Robot robot) {
-        super("Координаты робота", true, true, true, true);
+        super(LocalizationManager.getString("coordinateRobotWindow"), true, true, true, true);
         robot.addListener(this);
         setSize(300, 200);
 
@@ -34,6 +37,7 @@ public class CoordinateRobotWindow extends JInternalFrame implements PropertyCha
 
         setLayout(new BorderLayout());
         add(panel, BorderLayout.CENTER);
+        LocalizationManager.addLocalizationListener(this);
 
     }
 
@@ -59,5 +63,11 @@ public class CoordinateRobotWindow extends JInternalFrame implements PropertyCha
     @Override
     public String getFrameId() {
         return "CoordinateWindow";
+    }
+
+    @Override
+    public void localeChanged() {
+        setTitle(LocalizationManager.getString("coordinateRobotWindow"));
+        repaint();
     }
 }
