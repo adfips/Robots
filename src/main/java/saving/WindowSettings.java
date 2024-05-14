@@ -1,10 +1,13 @@
 package saving;
 
+import locale.LocalizationManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyVetoException;
 import java.io.*;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -35,6 +38,7 @@ public class WindowSettings {
             throw new RuntimeException("Не удалось обратиться к файлу: " + configFile, e);
         }
         Properties properties = new Properties();
+        properties.setProperty("locale", LocalizationManager.getLocale());
         for (Component component : windows)
             if (component instanceof Savable window)
                 saveWindowBounds(component, properties,window.getFrameId());
@@ -55,6 +59,9 @@ public class WindowSettings {
         try (InputStream inputStream = new FileInputStream(configFile)) {
             Properties properties = new Properties();
             properties.load(inputStream);
+            String locale = properties.getProperty("locale");
+            if (locale!=null)
+                LocalizationManager.setLocale(new Locale(locale));
             for (Component component : windows)
                 if (component instanceof Savable window)
                     loadWindowBounds(component, properties,window.getFrameId());

@@ -2,6 +2,7 @@ package gui;
 
 import controller.Controller;
 import log.Logger;
+import locale.LocalizationManager;
 import model.Robot;
 import saving.Savable;
 import saving.WindowSettings;
@@ -52,7 +53,7 @@ public class MainApplicationFrame extends JFrame implements Savable {
         logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
-        Logger.debug("Протокол работает");
+        Logger.debug(LocalizationManager.getString("messageLog"));
         return logWindow;
     }
 
@@ -119,13 +120,15 @@ public class MainApplicationFrame extends JFrame implements Savable {
     private void handleWindowClosingEvent() {
         int option = JOptionPane.showOptionDialog(
                 this,
-                "Вы хотите закрыть приложение?",
-                "Подтверждение",
+                LocalizationManager.getString("windowClosingMessage"),
+                LocalizationManager.getString("windowClosingTitle"),
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                new String[]{"Да", "Нет"},
-                "Да");
+                new String[]{LocalizationManager.getString("windowClosingValueYes"),
+                        LocalizationManager.getString("windowClosingValueNo"),
+                },
+                LocalizationManager.getString("windowClosingValueYes"));
         if (option == JOptionPane.YES_OPTION)
             setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
