@@ -21,7 +21,6 @@ import java.util.stream.Stream;
  */
 public class MainApplicationFrame extends JFrame implements Savable {
     private final JDesktopPane desktopPane = new JDesktopPane();
-
     private final WindowSettings windowSettings = new WindowSettings();
 
     public MainApplicationFrame() {
@@ -37,9 +36,10 @@ public class MainApplicationFrame extends JFrame implements Savable {
         addWindow(new GameWindow(controller, robot));
         addWindow(new CoordinateRobotWindow(robot));
 
+        setJMenuBar(new MenuBar(this));
+
         windowSettings.loadProperties(getAllComponents());
 
-        setJMenuBar(new MenuBar(this));
         initWindowCloseListener();
 
     }

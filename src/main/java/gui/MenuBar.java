@@ -30,7 +30,6 @@ public class MenuBar extends JMenuBar implements LocalizationListener{
         add(createTestMenu());
         add(createExitMenu());
         add(createLanguageMenu());
-        LocalizationManager.addLocalizationListener(this);
     }
 
     /**
@@ -110,10 +109,12 @@ public class MenuBar extends JMenuBar implements LocalizationListener{
         JMenuItem enMenuItem = new JMenuItem(LocalizationManager.getString("en"), KeyEvent.VK_E);
         JMenuItem ruMenuItem = new JMenuItem(LocalizationManager.getString("ru"), KeyEvent.VK_R);
         enMenuItem.addActionListener((event)->
-                LocalizationManager.setLocale(new Locale("en"))
+            {LocalizationManager.setLocale(new Locale("en"));
+                allRepaint();}
         );
         ruMenuItem.addActionListener((event)->
-                LocalizationManager.setLocale(new Locale("ru"))
+            {LocalizationManager.setLocale(new Locale("ru"));
+                allRepaint();}
         );
         languageMenu.add(enMenuItem);
         languageMenu.add(ruMenuItem);
@@ -122,6 +123,13 @@ public class MenuBar extends JMenuBar implements LocalizationListener{
         componentsMenu.add("en");
         componentsMenu.add("ru");
         return languageMenu;
+    }
+
+    private void allRepaint(){
+        for(Component component:frame.getAllComponents())
+            if (component instanceof LocalizationListener window)
+                window.localeChanged();
+        this.localeChanged();
     }
 
     @Override

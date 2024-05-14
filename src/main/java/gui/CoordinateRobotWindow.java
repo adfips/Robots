@@ -37,7 +37,6 @@ public class CoordinateRobotWindow extends JInternalFrame implements PropertyCha
 
         setLayout(new BorderLayout());
         add(panel, BorderLayout.CENTER);
-        LocalizationManager.addLocalizationListener(this);
 
     }
 

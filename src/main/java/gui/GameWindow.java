@@ -20,7 +20,6 @@ public class GameWindow extends JInternalFrame implements Savable, LocalizationL
         panel.add(m_visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
-        LocalizationManager.addLocalizationListener(this);
     }
 
     @Override
